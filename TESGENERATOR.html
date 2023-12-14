@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Chemistry Question Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .question {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 20px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        #numQuestions {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #downloadBtn {
+            background-color: #27ae60;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #downloadBtn:hover {
+            background-color: #219d55;
+        }
+
+        @media only screen and (min-width: 600px) {
+            .container {
+                width: 80%;
+            }
+        }
+
+        @media only screen and (min-width: 768px) {
+            .container {
+                width: 70%;
+            }
+        }
+
+        @media only screen and (min-width: 992px) {
+            .container {
+                width: 60%;
+            }
+        }
+    </style>
+    <!-- Include the html2canvas library for capturing HTML as an image -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+    <script>
+        function molar_mass(zat) {
+            var massa_atom = {
+                'H': 1.01, 'C': 12.01, 'N': 14.01, 'O': 16.00, 'Na': 22.99,
+                'Mg': 24.31, 'Cu': 63.55, 'Ag': 107.87, 'Fe': 55.85,
+                'Ca': 40.08, 'K': 39.10, 'Cl': 35.45
+            };
+            var jumlah_massa = 0.0;
+            for (var i = 0; i < zat.length; i++) {
+                jumlah_massa += massa_atom[zat[i]];
+            }
+            return jumlah_massa;
+        }
+
+        function generate_soal_reaksi() {
+            var reagen = ['Na', 'Cu', 'Mg'][Math.floor(Math.random() * 3)];
+            var n_reagen = Math.floor(Math.random() * 3) + 1;
+            var n_produk = Math.floor(Math.random() * 3) + 1;
+            var persamaan = n_reagen + ' ' + reagen + ' + ' + n_produk + ' Y --> XY';
+            var reagen_jumlah = (n_reagen * molar_mass(reagen)).toFixed(2);
+            var produk_jumlah = (n_produk * molar_mass('XY')).toFixed(2);
+            return `Dalam reaksi berikut:\n${persamaan}\nJika jumlah ${reagen} adalah ${reagen_jumlah} gram, berapakah massa ${produk_jumlah} gram Y yang dihasilkan?`;
+        }
+
+        function generate_soal_konsentrasi() {
+            var jenis_senyawa = ['HCl', 'NaOH', 'KMnO4'][Math.floor(Math.random() * 3)];
+            var volume_larutan = Math.floor(Math.random() * 401) + 100;
+            var konsentrasi = (Math.random() * 0.9 + 0.1).toFixed(2);
+            var jumlah_mol = (konsentrasi * volume_larutan).toFixed(2);
+            return `Seorang memiliki larutan ${jenis_senyawa} dengan konsentrasi ${konsentrasi} M. Jika volume larutan tersebut adalah ${volume_larutan} mL, berapakah jumlah mol zat dalam larutan?`;
+        }
+
+        function generate_soal_kelebihan_reagen() {
+            var reagen = ['HCl', 'NaOH', 'FeCl3'][Math.floor(Math.random() * 3)];
+            var mol_reagen = (Math.random() * 2 + 1).toFixed(2);
+            var kelebihan = (Math.random() * 0.9 + 1.1).toFixed(2);
+            var mol_sebenarnya = (mol_reagen * kelebihan).toFixed(2);
+            return `Dalam suatu reaksi, digunakan ${mol_reagen} mol ${reagen}. Jika reaksi berjalan dalam tingkat kelebihan ${kelebihan}, berapakah jumlah mol ${reagen} sebenarnya yang digunakan?`;
+        }
+
+        function generate_soal_pemurnian_logam() {
+            var logam = ['Ag', 'Cu', 'Fe'][Math.floor(Math.random() * 3)];
+            var percepatan = (Math.random() * 30 + 30).toFixed(2);
+            return `Dalam suatu reaksi untuk memurnikan ${logam}, pada waktu tertentu ditemukan bahwa jumlah logam yang terlarut adalah ${percepatan} gram. Berapakah jumlah logam dalam bentuk murni yang dimulai?`;
+        }
+
+        function generate_soal_atom_relatif() {
+            var senyawa = ['C6H12O6', 'NH4NO3', 'CaCO3'][Math.floor(Math.random() * 3)];
+            var elemen = ['C', 'H', 'O'][Math.floor(Math.random() * 3)];
+            var komposisi;
+            if (elemen === 'C') {
+                komposisi = (6 / molar_mass(senyawa) * 100).toFixed(2);
+            } else if (elemen === 'H') {
+                komposisi = (12 / molar_mass(senyawa) * 100).toFixed(2);
+            } else {
+                komposisi = (6 / molar_mass(senyawa) * 100).toFixed(2);
+            }
+            return `Dalam senyawa ${senyawa}, berapakah persentase komposisi elemen ${elemen}?`;
+        }
+
+        function generate_soal_massa_atom_relatif() {
+            var elemen = ['Ca', 'K', 'Cl'][Math.floor(Math.random() * 3)];
+            return `Untuk elemen ${elemen}, berapakah massa atom relatifnya?`;
+        }
+
+        function generate_soal() {
+            var jenis_soal = ['reaksi', 'konsentrasi', 'kelebihan_reagen', 'pemurnian_logam', 'atom_relatif', 'massa_atom_relatif'][Math.floor(Math.random() * 6)];
+            var soal = '';
+            var maxAttempts = 50;
+            var attempts = 0;
+
+            while (attempts < maxAttempts) {
+                if (jenis_soal === 'reaksi') {
+                    soal = generate_soal_reaksi();
+                } else if (jenis_soal === 'konsentrasi') {
+                    soal = generate_soal_konsentrasi();
+                } else if (jenis_soal === 'kelebihan_reagen') {
+                    soal = generate_soal_kelebihan_reagen();
+                } else if (jenis_soal === 'pemurnian_logam') {
+                    soal = generate_soal_pemurnian_logam();
+                } else if (jenis_soal === 'atom_relatif') {
+                    soal = generate_soal_atom_relatif();
+                } else {
+                    soal = generate_soal_massa_atom_relatif();
+                }
+
+                if (!generatedQuestions.includes(soal)) {
+                    generatedQuestions.push(soal);
+                    break;
+                }
+
+                attempts++;
+            }
+
+            return soal;
+        }
+
+        function generate_soal_multiple() {
+            var container = document.getElementById('container');
+            container.innerHTML = '';
+
+            var numQuestions = parseInt(document.getElementById('numQuestions').value, 10) || 10;
+            generatedQuestions = [];
+
+            for (var i = 0; i < numQuestions; i++) {
+                var question = document.createElement('div');
+                question.className = 'question';
+                question.textContent = `Soal ${i + 1}:\n${generate_soal()}`;
+                container.appendChild(question);
+            }
+        }
+
+        function downloadQuestions() {
+            var container = document.getElementById('container');
+            html2canvas(container).then(function (canvas) {
+                var link = document.createElement("a");
+                document.body.appendChild(link);
+                link.href = canvas.toDataURL("image/png");
+                link.download = "chemistry_questions.png";
+                link.click();
+                document.body.removeChild(link);
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <header>
+        STOIKIOMETRI QUESTION GENERATOR
+    </header>
+    <div class="container">
+        <label for="numQuestions">Number of Questions:</label>
+        <input type="number" id="numQuestions" min="1" value="10">
+        <button onclick="generate_soal_multiple()">Generate Questions</button>
+        <button id="downloadBtn" onclick="downloadQuestions()">Download as Image</button>
+        <div id="container"></div>
+    </div>
+</body>
+
+</html>
